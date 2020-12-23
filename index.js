@@ -1,12 +1,19 @@
-const http = require('http');
+const express = require('express');
 const port = process.env.PORT || 3000
+const bodyParser = require('body-parser');
+const poems = require('./routes/poems.js');
 
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/html');
-  res.end('<h1>Hello World</h1>');
+const app = express();
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+
+app.use('/', poems);
+app.use((req, res) => {
+  res.status(404).send({ "message": "Запрашиваемый ресурс не найден" }); 
 });
 
-server.listen(port,() => {
+app.listen(port,() => {
   console.log(`Server running at port `+port);
 });
